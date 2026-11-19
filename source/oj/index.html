@@ -1,0 +1,2426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>题库 - xuanoj</title>
+    <link rel="icon" href="https://hhxpoint.github.io/img/photo.jpg" type="image/jpeg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        /* 顶部导航栏 */
+        .top-nav {
+            background: #2d2d2d;
+            height: 56px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .nav-link {
+            color: #ccc;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #444;
+            border-radius: 4px;
+            padding: 0 10px;
+        }
+        
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            padding: 8px;
+            width: 200px;
+            font-size: 14px;
+            outline: none;
+        }
+        
+        .search-box input::placeholder {
+            color: #999;
+        }
+        
+        .search-btn {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            padding: 8px;
+            font-size: 14px;
+        }
+        
+        .back-blog {
+            color: #4CAF50 !important;
+        }
+        
+        /* 主内容区 */
+        .main-content {
+            margin-top: 56px;
+            padding: 20px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .problem-list-container {
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .problem-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: #fafafa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .problem-list-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .problem-filters select {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+            outline: none;
+            cursor: pointer;
+        }
+        
+        /* 题目表格 */
+        .problem-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .problem-table th, .problem-table td {
+            padding: 14px 20px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .problem-table th {
+            background: #fafafa;
+            font-weight: 500;
+            color: #666;
+            font-size: 13px;
+        }
+        
+        .problem-table tr:hover {
+            background: #f5f5f5;
+            cursor: pointer;
+        }
+        
+        .problem-table .problem-id {
+            color: #999;
+            font-size: 13px;
+            width: 80px;
+        }
+        
+        .problem-table .problem-name {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .problem-title-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .solved-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #e8f5e9;
+            color: #2e7d32;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .problem-table .problem-name:hover {
+            color: #4CAF50;
+        }
+        
+        .difficulty-tag {
+            padding: 2px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+            display: inline-block;
+        }
+        
+        .difficulty-tag.easy {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .difficulty-tag.medium {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .difficulty-tag.hard {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .ac-count {
+            color: #4CAF50;
+            font-size: 13px;
+            width: 80px;
+        }
+        
+        .submit-count {
+            color: #999;
+            font-size: 13px;
+            width: 80px;
+        }
+        
+        /* 分页 */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 20px;
+        }
+        
+        .page-btn {
+            padding: 8px 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fff;
+            color: #333;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .page-btn:hover:not(:disabled) {
+            border-color: #4CAF50;
+            color: #4CAF50;
+        }
+        
+        .page-btn.active {
+            background: #4CAF50;
+            color: #fff;
+            border-color: #4CAF50;
+        }
+        
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* 加载状态 */
+        .loading-container {
+            padding: 60px 20px;
+            text-align: center;
+            color: #999;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e0e0e0;
+            border-top-color: #4CAF50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .empty-container, .error-container {
+            padding: 60px 20px;
+            text-align: center;
+            color: #999;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 600px) {
+            .nav-left { gap: 15px; }
+            .nav-links { display: none; }
+            .search-box { display: none; }
+            .problem-list-header { flex-direction: column; gap: 10px; }
+        }
+        
+        /* 滚动条 */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #999; }
+        
+        /* 提交记录面板 */
+        .status-panel {
+            display: none;
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .status-panel.active {
+            display: block;
+        }
+
+        .ranking-panel {
+            display: none;
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .ranking-panel.active {
+            display: block;
+        }
+
+        .ranking-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #4CAF50, #43a047);
+            color: #fff;
+            text-align: center;
+        }
+
+        .ranking-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .ranking-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .ranking-table th, .ranking-table td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .ranking-table th {
+            background: #fafafa;
+            font-weight: 500;
+            color: #666;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .ranking-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .rank-badge {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .rank-1 { background: linear-gradient(135deg, #FFD700, #FFA500); }
+        .rank-2 { background: linear-gradient(135deg, #C0C0C0, #A0A0A0); }
+        .rank-3 { background: linear-gradient(135deg, #CD7F32, #8B4513); }
+        .rank-other { background: #e0e0e0; color: #666; }
+
+        .rank-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .rank-user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #4CAF50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 600;
+            overflow: hidden;
+        }
+
+        .rank-user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .rank-user-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .rank-user-username {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .rank-stat-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .rank-ac-rate {
+            color: #4CAF50;
+            font-weight: 600;
+        }
+        
+        .problem-panel.hidden {
+            display: none;
+        }
+        
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: #fafafa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .status-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .btn-refresh {
+            padding: 6px 12px;
+            background: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        
+        .btn-refresh:hover {
+            background: #43a047;
+        }
+        
+        /* 提交记录表格 */
+        .status-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .status-table th, .status-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+        }
+        
+        .status-table th {
+            background: #fafafa;
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .status-table tr:hover {
+            background: #f5f5f5;
+        }
+        
+        /* 状态标签 */
+        .status-tag {
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+            display: inline-block;
+        }
+        
+        .status-tag.accepted {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-tag.wrong_answer {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .status-tag.time_limit_exceeded {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .status-tag.runtime_error {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+        
+        .status-tag.compile_error {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .status-tag.pending, .status-tag.compiling, .status-tag.running {
+            background: #f5f5f5;
+            color: #666;
+        }
+        
+        .lang-tag {
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .time-tag {
+            color: #999;
+            font-size: 12px;
+        }
+        
+        /* 用户相关样式 */
+        .user-menu {
+            position: relative;
+        }
+        
+        .user-avatar-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid #4CAF50;
+            cursor: pointer;
+            overflow: hidden;
+            background: #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .user-avatar-btn:hover {
+            border-color: #66BB6A;
+            transform: scale(1.05);
+        }
+        
+        .user-avatar-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-avatar-btn .default-avatar {
+            color: #fff;
+            font-size: 18px;
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            min-width: 200px;
+            display: none;
+            z-index: 1001;
+            overflow: hidden;
+        }
+        
+        .user-dropdown.show {
+            display: block;
+        }
+        
+        .user-dropdown-header {
+            padding: 16px;
+            background: linear-gradient(135deg, #4CAF50, #43a047);
+            color: #fff;
+            text-align: center;
+        }
+        
+        .user-dropdown-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            margin: 0 auto 10px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .user-dropdown-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-dropdown-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .user-dropdown-username {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .user-dropdown-menu {
+            padding: 8px 0;
+        }
+        
+        .user-dropdown-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #333;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 14px;
+        }
+        
+        .user-dropdown-item:hover {
+            background: #f5f5f5;
+        }
+        
+        .user-dropdown-item svg {
+            width: 18px;
+            height: 18px;
+            color: #666;
+        }
+        
+        .user-dropdown-divider {
+            height: 1px;
+            background: #eee;
+            margin: 8px 0;
+        }
+        
+        .btn-login {
+            padding: 8px 20px;
+            background: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-login:hover {
+            background: #43a047;
+        }
+        
+        /* 登录/注册模态框 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .modal-overlay.show {
+            display: flex;
+        }
+        
+        .modal {
+            background: #fff;
+            border-radius: 12px;
+            width: 400px;
+            max-width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            animation: modalIn 0.3s ease;
+        }
+        
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        .modal-header {
+            padding: 24px 24px 0;
+            text-align: center;
+        }
+        
+        .modal-logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #4CAF50;
+            margin-bottom: 8px;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .modal-tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            margin: 20px 0 0;
+        }
+        
+        .modal-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 14px;
+            color: #999;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s;
+        }
+        
+        .modal-tab.active {
+            color: #4CAF50;
+            font-weight: 500;
+        }
+        
+        .modal-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #4CAF50;
+        }
+        
+        .modal-body {
+            padding: 24px;
+        }
+        
+        .modal-form {
+            display: none;
+        }
+        
+        .modal-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus {
+            border-color: #4CAF50;
+        }
+        
+        .form-group input::placeholder {
+            color: #bbb;
+        }
+        
+        .form-hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+        
+        .form-error {
+            font-size: 12px;
+            color: #c62828;
+            margin-top: 4px;
+            display: none;
+        }
+        
+        .form-error.show {
+            display: block;
+        }
+        
+        .password-strength {
+            margin-top: 8px;
+        }
+        
+        .strength-bar {
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+        
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s, background-color 0.3s;
+            border-radius: 2px;
+        }
+        
+        .strength-fill.weak {
+            width: 25%;
+            background-color: #f44336;
+        }
+        
+        .strength-fill.fair {
+            width: 50%;
+            background-color: #ff9800;
+        }
+        
+        .strength-fill.good {
+            width: 75%;
+            background-color: #4caf50;
+        }
+        
+        .strength-fill.strong {
+            width: 100%;
+            background-color: #2e7d32;
+        }
+        
+        .strength-text {
+            font-size: 12px;
+            color: #666;
+            min-height: 16px;
+        }
+        
+        .password-match {
+            font-size: 12px;
+            margin-top: 4px;
+            min-height: 16px;
+        }
+        
+        .password-match.match {
+            color: #4caf50;
+        }
+        
+        .password-match.no-match {
+            color: #f44336;
+        }
+        
+        .btn-submit-form {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #4CAF50, #43a047);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-submit-form:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(76,175,80,0.3);
+        }
+        
+        .btn-submit-form:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #f5f5f5;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #666;
+            transition: all 0.2s;
+        }
+        
+        .modal-close:hover {
+            background: #eee;
+            color: #333;
+        }
+        
+        /* 头像上传 */
+        .avatar-upload {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .avatar-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #4CAF50;
+            margin: 0 auto 12px;
+            overflow: hidden;
+            background: #f5f5f5;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .avatar-preview .change-avatar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            font-size: 11px;
+            padding: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .avatar-preview:hover .change-avatar {
+            opacity: 1;
+        }
+        
+        #avatarInput {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="/" class="logo-text">xuanoj</a>
+                <nav class="nav-links">
+                    <a href="/" class="nav-link active" id="navProblems" onclick="showProblems(event)">题库</a>
+                    <a href="javascript:void(0)" class="nav-link" id="navStatus" onclick="showStatus(event)">提交记录</a>
+                    <a href="javascript:void(0)" class="nav-link" id="navRanking" onclick="showRanking(event)">排行榜</a>
+                </nav>
+            </div>
+            <div class="nav-right">
+                <div class="search-box">
+                    <input type="text" placeholder="搜索题目..." id="searchInput" onkeyup="handleSearch(event)">
+                    <button class="search-btn" onclick="searchProblems()">🔍</button>
+                </div>
+                <!-- 用户区域 -->
+                <div class="user-menu" id="userMenu">
+                    <button class="btn-login" id="btnShowLogin" onclick="showLoginModal()">登录</button>
+                    <div class="user-avatar-btn" id="userAvatarBtn" style="display:none" onclick="toggleUserDropdown()">
+                        <span class="default-avatar" id="defaultAvatar">👤</span>
+                        <img id="userAvatarImg" style="display:none" src="" alt="">
+                    </div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="user-dropdown-header">
+                            <div class="user-dropdown-avatar">
+                                <img id="dropdownAvatar" src="" alt="">
+                            </div>
+                            <div class="user-dropdown-name" id="dropdownNickname">用户</div>
+                            <div class="user-dropdown-username" id="dropdownUsername">@username</div>
+                        </div>
+                        <div class="user-dropdown-menu">
+                            <div class="user-dropdown-item" onclick="openProfileModal()">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                                个人资料
+                            </div>
+                            <div class="user-dropdown-item" onclick="openAvatarModal()">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                                更换头像
+                            </div>
+                            <div class="user-dropdown-item" onclick="openChangePasswordModal()">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                                修改密码
+                            </div>
+                            <div class="user-dropdown-divider"></div>
+                            <div class="user-dropdown-item" onclick="logout()">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+                                退出登录
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="https://hhxpoint.github.io" class="nav-link back-blog">返回博客</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <!-- 题目列表面板 -->
+        <div class="problem-list-container problem-panel" id="problemPanel">
+            <div class="problem-list-header">
+                <h2>📝 题目列表</h2>
+                <div class="problem-filters">
+                    <select id="difficultyFilter" onchange="filterProblems()">
+                        <option value="">全部难度</option>
+                        <option value="入门">入门</option>
+                        <option value="简单">简单</option>
+                        <option value="中等">中等</option>
+                        <option value="困难">困难</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="problemListContainer">
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <div>加载中...</div>
+                </div>
+            </div>
+
+            <div class="pagination-container" id="pagination"></div>
+        </div>
+
+        <!-- 提交记录面板 -->
+        <div class="status-panel" id="statusPanel">
+            <div class="status-header">
+                <h2>📋 提交记录</h2>
+                <button class="btn-refresh" onclick="loadSubmissions()">刷新</button>
+            </div>
+
+            <div id="statusListContainer">
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <div>加载中...</div>
+                </div>
+            </div>
+
+            <div class="pagination-container" id="statusPagination"></div>
+        </div>
+
+        <!-- 排行榜面板 -->
+        <div class="ranking-panel" id="rankingPanel">
+            <div class="ranking-header">
+                <div class="ranking-title">🏆 用户排行榜</div>
+                <div class="ranking-subtitle">根据AC题目数量和通过率排名（显示全部注册用户）</div>
+            </div>
+
+            <div id="rankingListContainer">
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <div>加载中...</div>
+                </div>
+            </div>
+
+            <div class="pagination-container" id="rankingPagination"></div>
+        </div>
+    </main>
+
+    <!-- 登录/注册模态框 -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal" style="position:relative">
+            <button class="modal-close" onclick="closeLoginModal()">×</button>
+            <div class="modal-header">
+                <div class="modal-logo">xuanoj</div>
+                <div class="modal-title">欢迎来到在线编程平台</div>
+            </div>
+            <div class="modal-tabs">
+                <button class="modal-tab active" onclick="switchAuthTab('login')">登录</button>
+                <button class="modal-tab" onclick="switchAuthTab('register')">注册</button>
+            </div>
+            <div class="modal-body">
+                <!-- 登录表单 -->
+                <form class="modal-form active" id="loginForm" onsubmit="return handleLogin(event)">
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input type="text" id="loginUsername" placeholder="请输入用户名" required>
+                    </div>
+                    <div class="form-group">
+                        <label>密码</label>
+                        <input type="password" id="loginPassword" placeholder="请输入密码" required>
+                        <div style="text-align: right; margin-top: 6px;">
+                            <a href="/oj/forgot-password.html" style="color: #4CAF50; font-size: 13px; text-decoration: none;">忘记密码？</a>
+                        </div>
+                    </div>
+                    <div class="form-error" id="loginError"></div>
+                    <button type="submit" class="btn-submit-form" id="loginBtn">登录</button>
+                </form>
+                
+                <!-- 注册表单 -->
+                <form class="modal-form" id="registerForm" onsubmit="return handleRegister(event)">
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input type="text" id="regUsername" placeholder="3-20个字符，只能包含字母、数字和下划线" required>
+                        <div class="form-hint">将作为您的登录账号</div>
+                    </div>
+                    <div class="form-group">
+                        <label>昵称</label>
+                        <input type="text" id="regNickname" placeholder="您希望显示的名称">
+                    </div>
+                    <div class="form-group">
+                        <label>密码</label>
+                        <input type="password" id="regPassword" placeholder="至少8个字符，包含大小写字母、数字和特殊字符" required oninput="checkPasswordStrength()">
+                        <div class="password-strength" id="passwordStrength">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strengthFill"></div>
+                            </div>
+                            <div class="strength-text" id="strengthText">密码强度</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>确认密码</label>
+                        <input type="password" id="regConfirm" placeholder="再次输入密码" required oninput="checkPasswordMatch()">
+                        <div class="password-match" id="passwordMatch"></div>
+                    </div>
+                    <div class="form-error" id="registerError"></div>
+                    <button type="submit" class="btn-submit-form" id="registerBtn">注册</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 头像上传模态框 -->
+    <div class="modal-overlay" id="avatarModal">
+        <div class="modal" style="position:relative">
+            <button class="modal-close" onclick="closeAvatarModal()">×</button>
+            <div class="modal-header">
+                <div class="modal-title">更换头像</div>
+            </div>
+            <div class="modal-body">
+                <div class="avatar-upload">
+                    <div class="avatar-preview" onclick="document.getElementById('avatarInput').click()">
+                        <img id="avatarPreview" src="" alt="">
+                        <div class="change-avatar">点击更换</div>
+                    </div>
+                    <input type="file" id="avatarInput" accept="image/*" onchange="handleAvatarSelect(event)">
+                    <div class="form-hint">支持 JPG、PNG 格式，大小不超过 500KB</div>
+                </div>
+                <div class="form-error" id="avatarError"></div>
+                <button class="btn-submit-form" onclick="uploadAvatar()">保存头像</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 修改密码模态框 -->
+    <div class="modal-overlay" id="changePasswordModal">
+        <div class="modal" style="position:relative">
+            <button class="modal-close" onclick="closeChangePasswordModal()">×</button>
+            <div class="modal-header">
+                <div class="modal-title">修改密码</div>
+            </div>
+            <div class="modal-body">
+                <form id="changePasswordForm" onsubmit="return handleChangePassword(event)">
+                    <div class="form-group">
+                        <label>当前密码</label>
+                        <input type="password" id="currentPassword" placeholder="请输入当前密码" required>
+                    </div>
+                    <div class="form-group">
+                        <label>新密码</label>
+                        <input type="password" id="newPassword" placeholder="至少8个字符，包含大小写字母、数字和特殊字符" required oninput="checkNewPasswordStrength()">
+                        <div class="password-strength" id="newPasswordStrength">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="newStrengthFill"></div>
+                            </div>
+                            <div class="strength-text" id="newStrengthText">密码强度</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>确认新密码</label>
+                        <input type="password" id="confirmNewPassword" placeholder="再次输入新密码" required oninput="checkNewPasswordMatch()">
+                        <div class="password-match" id="newPasswordMatch"></div>
+                    </div>
+                    <div class="form-error" id="changePasswordError"></div>
+                    <button type="submit" class="btn-submit-form" id="changePasswordBtn">修改密码</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 个人资料编辑模态框 -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal" style="position:relative">
+            <button class="modal-close" onclick="closeProfileModal()">×</button>
+            <div class="modal-header">
+                <div class="modal-title">个人资料</div>
+            </div>
+            <div class="modal-body">
+                <form id="profileForm" onsubmit="return handleUpdateProfile(event)">
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input type="text" id="profileUsername" placeholder="用户名" readonly style="background-color: #f5f5f5;">
+                        <div class="form-hint">用户名不可修改</div>
+                    </div>
+                    <div class="form-group">
+                        <label>昵称</label>
+                        <input type="text" id="profileNickname" placeholder="请输入昵称" required>
+                    </div>
+                    <div class="form-group">
+                        <label>邮箱</label>
+                        <input type="email" id="profileEmail" placeholder="请输入邮箱（可选）">
+                        <div class="form-hint">用于接收密码重置邮件</div>
+                    </div>
+                    <div class="form-error" id="profileError"></div>
+                    <button type="submit" class="btn-submit-form" id="profileBtn">保存修改</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        let currentPage = 1;
+        let currentStatusPage = 1;
+        let currentRankingPage = 1;
+        let currentView = 'problems'; // 'problems' | 'status' | 'ranking'
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initUser();
+            loadProblems();
+
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('open') === 'profile' && currentUser) {
+                openProfileModal();
+                // 打开后清理 URL 参数，避免刷新重复弹窗
+                window.history.replaceState({}, '', '/oj/index.html');
+            } else if (params.get('open') === 'status') {
+                showStatus();
+                window.history.replaceState({}, '', '/oj/index.html');
+            } else if (params.get('open') === 'ranking') {
+                showRanking();
+                window.history.replaceState({}, '', '/oj/index.html');
+            }
+        });
+
+        // 切换到题目列表
+        function showProblems(event) {
+            if (event) event.preventDefault();
+            currentView = 'problems';
+            document.getElementById('problemPanel').classList.remove('hidden');
+            document.getElementById('statusPanel').classList.remove('active');
+            document.getElementById('rankingPanel').classList.remove('active');
+            document.getElementById('navProblems').classList.add('active');
+            document.getElementById('navStatus').classList.remove('active');
+            document.getElementById('navRanking').classList.remove('active');
+        }
+
+        // 切换到提交记录
+        function showStatus(event) {
+            if (event) event.preventDefault();
+            currentView = 'status';
+            document.getElementById('problemPanel').classList.add('hidden');
+            document.getElementById('statusPanel').classList.add('active');
+            document.getElementById('rankingPanel').classList.remove('active');
+            document.getElementById('navProblems').classList.remove('active');
+            document.getElementById('navStatus').classList.add('active');
+            document.getElementById('navRanking').classList.remove('active');
+            loadSubmissions();
+        }
+
+        // 切换到排行榜
+        function showRanking(event) {
+            if (event) event.preventDefault();
+            currentView = 'ranking';
+            document.getElementById('problemPanel').classList.add('hidden');
+            document.getElementById('statusPanel').classList.remove('active');
+            document.getElementById('rankingPanel').classList.add('active');
+            document.getElementById('navProblems').classList.remove('active');
+            document.getElementById('navStatus').classList.remove('active');
+            document.getElementById('navRanking').classList.add('active');
+            loadRanking();
+        }
+
+        // 加载提交记录
+        async function loadSubmissions(page = 1) {
+            const container = document.getElementById('statusListContainer');
+            container.innerHTML = '<div class="loading-container"><div class="loading-spinner"></div><div>加载中...</div></div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/status?page=${page}&limit=20`);
+                const data = await response.json();
+
+                if (data.success) {
+                    currentStatusPage = page;
+                    renderSubmissions(data.data);
+                    renderStatusPagination(page, data.pagination);
+                } else {
+                    container.innerHTML = '<div class="error-container">加载失败: ' + (data.message || '') + '</div>';
+                }
+            } catch (error) {
+                container.innerHTML = '<div class="error-container">网络错误: ' + error.message + '</div>';
+            }
+        }
+
+        // 渲染提交记录列表
+        function renderSubmissions(submissions) {
+            const container = document.getElementById('statusListContainer');
+
+            if (!submissions || submissions.length === 0) {
+                container.innerHTML = '<div class="empty-container">暂无提交记录</div>';
+                return;
+            }
+
+            let html = `<table class="status-table">
+                <thead>
+                    <tr>
+                        <th style="width:150px">提交时间</th>
+                        <th style="width:120px">题目</th>
+                        <th style="width:80px">语言</th>
+                        <th style="width:100px">状态</th>
+                        <th style="width:80px">运行时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+            submissions.forEach(sub => {
+                const time = new Date(sub.submittedAt || sub.createdAt).toLocaleString('zh-CN');
+                const statusClass = getStatusClass(sub.status);
+                const statusText = getStatusText(sub.status);
+                const lang = getLanguageName(sub.language);
+
+                html += `<tr>
+                    <td class="time-tag">${time}</td>
+                    <td>${sub.problemId ? sub.problemId.substring(0, 8) + '...' : '-'}</td>
+                    <td class="lang-tag">${lang}</td>
+                    <td><span class="status-tag ${statusClass}">${statusText}</span></td>
+                    <td>${sub.runtime || 0}ms</td>
+                    <td><a href="/problem/index.html?id=${sub.problemId}" style="color:#4CAF50;text-decoration:none;">查看题目</a></td>
+                </tr>`;
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        // 状态类名映射
+        function getStatusClass(status) {
+            const map = {
+                'accepted': 'accepted',
+                'wrong_answer': 'wrong_answer',
+                'time_limit_exceeded': 'time_limit_exceeded',
+                'runtime_error': 'runtime_error',
+                'compile_error': 'compile_error',
+                'pending': 'pending',
+                'compiling': 'compiling',
+                'running': 'running'
+            };
+            return map[status] || 'pending';
+        }
+
+        // 状态文本映射
+        function getStatusText(status) {
+            const map = {
+                'accepted': 'Accepted',
+                'wrong_answer': 'Wrong Answer',
+                'time_limit_exceeded': 'TLE',
+                'runtime_error': 'RE',
+                'compile_error': 'CE',
+                'pending': '等待中',
+                'compiling': '编译中',
+                'running': '运行中'
+            };
+            return map[status] || status;
+        }
+
+        // 语言名称映射
+        function getLanguageName(lang) {
+            const map = {
+                'cpp': 'C++',
+                'java': 'Java',
+                'python': 'Python'
+            };
+            return map[lang] || lang;
+        }
+
+        // 渲染提交记录分页
+        function renderStatusPagination(page, pagination) {
+            const container = document.getElementById('statusPagination');
+            if (!pagination) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            const totalPages = Math.ceil((pagination.total || 0) / pagination.limit) || 1;
+
+            let html = `<button class="page-btn" onclick="loadSubmissions(${page - 1})" ${page === 1 ? 'disabled' : ''}>‹ 上一页</button>`;
+
+            const start = Math.max(1, page - 2);
+            const end = Math.min(totalPages, page + 2);
+
+            if (start > 1) {
+                html += `<button class="page-btn" onclick="loadSubmissions(1)">1</button>`;
+                if (start > 2) html += '<span>...</span>';
+            }
+
+            for (let i = start; i <= end; i++) {
+                html += `<button class="page-btn ${i === page ? 'active' : ''}" onclick="loadSubmissions(${i})">${i}</button>`;
+            }
+
+            if (end < totalPages) {
+                if (end < totalPages - 1) html += '<span>...</span>';
+                html += `<button class="page-btn" onclick="loadSubmissions(${totalPages})">${totalPages}</button>`;
+            }
+
+            html += `<button class="page-btn" onclick="loadSubmissions(${page + 1})" ${page === totalPages ? 'disabled' : ''}>下一页 ›</button>`;
+
+            container.innerHTML = html;
+        }
+
+        async function loadRanking(page = 1) {
+            const container = document.getElementById('rankingListContainer');
+            container.innerHTML = '<div class="loading-container"><div class="loading-spinner"></div><div>加载中...</div></div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/users/ranking?page=${page}&limit=20`);
+                const data = await response.json();
+
+                if (data.success) {
+                    currentRankingPage = page;
+                    renderRanking(data.data);
+                    renderRankingPagination(page, data.pagination);
+                } else {
+                    container.innerHTML = '<div class="error-container">加载失败: ' + (data.message || '') + '</div>';
+                }
+            } catch (error) {
+                container.innerHTML = '<div class="error-container">网络错误: ' + error.message + '</div>';
+            }
+        }
+
+        function renderRanking(users) {
+            const container = document.getElementById('rankingListContainer');
+
+            if (!users || users.length === 0) {
+                container.innerHTML = '<div class="empty-container">暂无有效排行榜数据</div>';
+                return;
+            }
+
+            let html = `<table class="ranking-table">
+                <thead>
+                    <tr>
+                        <th style="width: 80px;">排名</th>
+                        <th>用户</th>
+                        <th style="width: 100px;">AC题目</th>
+                        <th style="width: 100px;">提交数</th>
+                        <th style="width: 100px;">AC数</th>
+                        <th style="width: 100px;">通过率</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+            users.forEach((user, index) => {
+                const rank = (currentRankingPage - 1) * 20 + index + 1;
+                const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
+                const baseName = user.nickname || user.username || 'U';
+                const avatarInitial = baseName.charAt(0).toUpperCase();
+
+                html += `<tr>
+                    <td>
+                        <span class="rank-badge ${rankClass}">${rank}</span>
+                    </td>
+                    <td>
+                        <div class="rank-user-info">
+                            <div class="rank-user-avatar">
+                                ${user.avatar ? `<img src="${user.avatar}" alt="${user.username}">` : avatarInitial}
+                            </div>
+                            <div>
+                                <div class="rank-user-name">${user.nickname || user.username}</div>
+                                <div class="rank-user-username">@${user.username}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="rank-stat-value">${user.acceptedProblems}</td>
+                    <td class="rank-stat-value">${user.totalSubmissions}</td>
+                    <td class="rank-stat-value">${user.acceptedSubmissions}</td>
+                    <td class="rank-ac-rate">${user.acRate}%</td>
+                </tr>`;
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function renderRankingPagination(page, pagination) {
+            const container = document.getElementById('rankingPagination');
+            if (!pagination) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const totalPages = Math.ceil((pagination.total || 0) / pagination.limit) || 1;
+            let html = `<button class="page-btn" onclick="loadRanking(${page - 1})" ${page === 1 ? 'disabled' : ''}>‹ 上一页</button>`;
+
+            const start = Math.max(1, page - 2);
+            const end = Math.min(totalPages, page + 2);
+
+            if (start > 1) {
+                html += `<button class="page-btn" onclick="loadRanking(1)">1</button>`;
+                if (start > 2) html += '<span>...</span>';
+            }
+
+            for (let i = start; i <= end; i++) {
+                html += `<button class="page-btn ${i === page ? 'active' : ''}" onclick="loadRanking(${i})">${i}</button>`;
+            }
+
+            if (end < totalPages) {
+                if (end < totalPages - 1) html += '<span>...</span>';
+                html += `<button class="page-btn" onclick="loadRanking(${totalPages})">${totalPages}</button>`;
+            }
+
+            html += `<button class="page-btn" onclick="loadRanking(${page + 1})" ${page === totalPages ? 'disabled' : ''}>下一页 ›</button>`;
+            container.innerHTML = html;
+        }
+
+        async function loadProblems(page = 1) {
+            const container = document.getElementById('problemListContainer');
+            container.innerHTML = '<div class="loading-container"><div class="loading-spinner"></div><div>加载中...</div></div>';
+
+            const difficulty = document.getElementById('difficultyFilter').value;
+            const keyword = document.getElementById('searchInput').value;
+
+            let url = `${API_BASE}/problems?page=${page}&limit=20`;
+            if (difficulty) url += `&difficulty=${encodeURIComponent(difficulty)}`;
+            if (keyword) url += `&keyword=${encodeURIComponent(keyword)}`;
+
+            const headers = {};
+            if (currentUser && currentUser.userId && currentUser.token) {
+                headers['X-User-Id'] = currentUser.userId;
+                headers['X-User-Token'] = currentUser.token;
+            }
+
+            try {
+                const response = await fetch(url, { headers });
+                const data = await response.json();
+
+                if (data.success) {
+                    currentPage = page;
+                    renderProblemList(data.data);
+                    renderPagination(page, data.pagination);
+                } else {
+                    container.innerHTML = '<div class="error-container">加载失败: ' + (data.message || '') + '</div>';
+                }
+            } catch (error) {
+                container.innerHTML = '<div class="error-container">网络错误: ' + error.message + '</div>';
+            }
+        }
+
+        function renderProblemList(problems) {
+            const container = document.getElementById('problemListContainer');
+
+            if (!problems || problems.length === 0) {
+                container.innerHTML = '<div class="empty-container">暂无题目</div>';
+                return;
+            }
+
+            let html = '<table class="problem-table"><thead><tr><th class="problem-id">题号</th><th>标题</th><th style="width:80px">难度</th><th class="ac-count">通过</th><th class="submit-count">提交</th></tr></thead><tbody>';
+
+            problems.forEach((problem, index) => {
+                const id = problem.id || (index + 1);
+                const difficulty = problem.difficulty || '入门';
+                const diffClass = getDifficultyClass(difficulty);
+
+                html += `<tr onclick="goToProblem('${problem._id}')">
+                    <td class="problem-id">${id}.</td>
+                    <td class="problem-name">
+                        <span class="problem-title-wrap">
+                            <span>${problem.title || '未知题目'}</span>
+                            ${problem.acceptedByCurrentUser ? '<span class="solved-badge" title="你已通过这道题">✓</span>' : ''}
+                        </span>
+                    </td>
+                    <td><span class="difficulty-tag ${diffClass}">${difficulty}</span></td>
+                    <td class="ac-count">${problem.acceptCount || 0}</td>
+                    <td class="submit-count">${problem.submitCount || 0}</td>
+                </tr>`;
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function getDifficultyClass(difficulty) {
+            const map = { '入门': 'easy', '简单': 'easy', '中等': 'medium', '困难': 'hard' };
+            return map[difficulty] || 'easy';
+        }
+
+        function renderPagination(page, pagination) {
+            const container = document.getElementById('pagination');
+            const totalPages = Math.ceil((pagination.total || 0) / pagination.limit) || 1;
+
+            let html = `<button class="page-btn" onclick="loadProblems(${page - 1})" ${page === 1 ? 'disabled' : ''}>‹ 上一页</button>`;
+
+            const start = Math.max(1, page - 2);
+            const end = Math.min(totalPages, page + 2);
+
+            if (start > 1) {
+                html += `<button class="page-btn" onclick="loadProblems(1)">1</button>`;
+                if (start > 2) html += '<span>...</span>';
+            }
+
+            for (let i = start; i <= end; i++) {
+                html += `<button class="page-btn ${i === page ? 'active' : ''}" onclick="loadProblems(${i})">${i}</button>`;
+            }
+
+            if (end < totalPages) {
+                if (end < totalPages - 1) html += '<span>...</span>';
+                html += `<button class="page-btn" onclick="loadProblems(${totalPages})">${totalPages}</button>`;
+            }
+
+            html += `<button class="page-btn" onclick="loadProblems(${page + 1})" ${page === totalPages ? 'disabled' : ''}>下一页 ›</button>`;
+
+            container.innerHTML = html;
+        }
+
+        function searchProblems() { loadProblems(1); }
+        function handleSearch(event) { if (event.key === 'Enter') searchProblems(); }
+        function filterProblems() { loadProblems(1); }
+        function goToProblem(problemId) { window.location.href = '/problem/index.html?id=' + problemId; }
+        
+        // ========== 用户认证相关 ==========
+        let currentUser = null;
+        let selectedAvatar = null;
+        
+        // 初始化用户状态
+        function initUser() {
+            const savedUser = localStorage.getItem('oj_user');
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    verifyUser();
+                } catch (e) {
+                    localStorage.removeItem('oj_user');
+                }
+            }
+        }
+        
+        // 验证用户Token
+        async function verifyUser() {
+            if (!currentUser) return;
+            
+            try {
+                const res = await fetch('/api/users/verify', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        userId: currentUser.userId,
+                        token: currentUser.token
+                    })
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    updateUIForLoggedInUser();
+                } else {
+                    localStorage.removeItem('oj_user');
+                    currentUser = null;
+                    // 如果是token过期，显示提示
+                    if (data.message && data.message.includes('过期')) {
+                        alert('您的登录已过期，请重新登录');
+                    }
+                }
+            } catch (error) {
+                console.error('验证用户失败:', error);
+            }
+        }
+        
+        // 更新UI显示登录状态
+        function updateUIForLoggedInUser() {
+            if (!currentUser) return;
+            
+            document.getElementById('btnShowLogin').style.display = 'none';
+            document.getElementById('userAvatarBtn').style.display = 'flex';
+            
+            // 更新下拉菜单信息
+            document.getElementById('dropdownNickname').textContent = currentUser.nickname || currentUser.username;
+            document.getElementById('dropdownUsername').textContent = '@' + currentUser.username;
+            
+            // 更新头像
+            if (currentUser.avatar) {
+                document.getElementById('userAvatarImg').src = currentUser.avatar;
+                document.getElementById('userAvatarImg').style.display = 'block';
+                document.getElementById('defaultAvatar').style.display = 'none';
+                document.getElementById('dropdownAvatar').src = currentUser.avatar;
+            } else {
+                document.getElementById('userAvatarImg').style.display = 'none';
+                document.getElementById('defaultAvatar').style.display = 'block';
+            }
+        }
+        
+        // 显示登录模态框
+        function showLoginModal() {
+            document.getElementById('loginModal').classList.add('show');
+            document.getElementById('loginUsername').focus();
+        }
+        
+        // 关闭登录模态框
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('show');
+            clearFormErrors();
+        }
+        
+        // 切换登录/注册标签
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.modal-form').forEach(f => f.classList.remove('active'));
+            
+            if (tab === 'login') {
+                document.querySelector('.modal-tab:first-child').classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                document.querySelector('.modal-tab:last-child').classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+            }
+            clearFormErrors();
+        }
+        
+        // 清除表单错误
+        function clearFormErrors() {
+            document.querySelectorAll('.form-error').forEach(e => {
+                e.classList.remove('show');
+                e.textContent = '';
+            });
+        }
+        
+        // 显示表单错误
+        function showFormError(formId, message) {
+            const errorEl = document.getElementById(formId + 'Error');
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.classList.add('show');
+            }
+        }
+        
+        // 处理登录
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!username || !password) {
+                showFormError('login', '请填写用户名和密码');
+                return false;
+            }
+            
+            const btn = document.getElementById('loginBtn');
+            btn.disabled = true;
+            btn.textContent = '登录中...';
+            
+            try {
+                const res = await fetch('/api/users/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    currentUser = data.data;
+                    localStorage.setItem('oj_user', JSON.stringify(currentUser));
+                    updateUIForLoggedInUser();
+                    closeLoginModal();
+                    document.getElementById('loginForm').reset();
+                    if (currentView === 'problems') {
+                        loadProblems(currentPage || 1);
+                    }
+                } else {
+                    showFormError('login', data.message);
+                }
+            } catch (error) {
+                showFormError('login', '网络错误，请稍后重试');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '登录';
+            }
+            
+            return false;
+        }
+        
+        // 检查密码强度
+        function checkPasswordStrength() {
+            const password = document.getElementById('regPassword').value;
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+            
+            if (!password) {
+                strengthFill.className = 'strength-fill';
+                strengthText.textContent = '密码强度';
+                return;
+            }
+            
+            let score = 0;
+            
+            // 长度检查
+            if (password.length >= 8) score++;
+            if (password.length >= 12) score++;
+            
+            // 大写字母
+            if (/[A-Z]/.test(password)) score++;
+            
+            // 小写字母
+            if (/[a-z]/.test(password)) score++;
+            
+            // 数字
+            if (/[0-9]/.test(password)) score++;
+            
+            // 特殊字符
+            if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) score++;
+            
+            let strengthClass = '';
+            let strengthLabel = '';
+            
+            if (score <= 2) {
+                strengthClass = 'weak';
+                strengthLabel = '弱';
+                strengthText.style.color = '#f44336';
+            } else if (score <= 3) {
+                strengthClass = 'fair';
+                strengthLabel = '中等';
+                strengthText.style.color = '#ff9800';
+            } else if (score <= 4) {
+                strengthClass = 'good';
+                strengthLabel = '强';
+                strengthText.style.color = '#4caf50';
+            } else {
+                strengthClass = 'strong';
+                strengthLabel = '非常强';
+                strengthText.style.color = '#2e7d32';
+            }
+            
+            strengthFill.className = 'strength-fill ' + strengthClass;
+            strengthText.textContent = '密码强度: ' + strengthLabel;
+            
+            // 同时检查密码匹配
+            checkPasswordMatch();
+        }
+        
+        // 检查密码匹配
+        function checkPasswordMatch() {
+            const password = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regConfirm').value;
+            const matchDiv = document.getElementById('passwordMatch');
+            
+            if (!confirm) {
+                matchDiv.textContent = '';
+                matchDiv.className = 'password-match';
+                return;
+            }
+            
+            if (password === confirm) {
+                matchDiv.textContent = '✓ 密码匹配';
+                matchDiv.className = 'password-match match';
+            } else {
+                matchDiv.textContent = '✗ 密码不匹配';
+                matchDiv.className = 'password-match no-match';
+            }
+        }
+        
+        // 处理注册
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('regUsername').value.trim();
+            const nickname = document.getElementById('regNickname').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regConfirm').value;
+            
+            if (!username || !password) {
+                showFormError('register', '请填写用户名和密码');
+                return false;
+            }
+            
+            if (username.length < 3) {
+                showFormError('register', '用户名至少3个字符');
+                return false;
+            }
+            
+            if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                showFormError('register', '用户名只能包含字母、数字和下划线');
+                return false;
+            }
+            
+            // 验证密码强度（客户端验证）
+            if (password.length < 8) {
+                showFormError('register', '密码长度至少8个字符');
+                return false;
+            }
+            
+            if (!/[A-Z]/.test(password)) {
+                showFormError('register', '密码必须包含至少一个大写字母');
+                return false;
+            }
+            
+            if (!/[a-z]/.test(password)) {
+                showFormError('register', '密码必须包含至少一个小写字母');
+                return false;
+            }
+            
+            if (!/[0-9]/.test(password)) {
+                showFormError('register', '密码必须包含至少一个数字');
+                return false;
+            }
+            
+            if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+                showFormError('register', '密码必须包含至少一个特殊字符');
+                return false;
+            }
+            
+            if (password !== confirm) {
+                showFormError('register', '两次输入的密码不一致');
+                return false;
+            }
+            
+            const btn = document.getElementById('registerBtn');
+            btn.disabled = true;
+            btn.textContent = '注册中...';
+            
+            try {
+                const res = await fetch('/api/users/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ username, password, nickname: nickname || username })
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    currentUser = data.data;
+                    localStorage.setItem('oj_user', JSON.stringify(currentUser));
+                    updateUIForLoggedInUser();
+                    closeLoginModal();
+                    document.getElementById('registerForm').reset();
+                    if (currentView === 'problems') {
+                        loadProblems(currentPage || 1);
+                    }
+                } else {
+                    showFormError('register', data.message);
+                }
+            } catch (error) {
+                showFormError('register', '网络错误，请稍后重试');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '注册';
+            }
+            
+            return false;
+        }
+        
+        // 切换用户下拉菜单
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+        
+        // 点击外部关闭下拉菜单
+        document.addEventListener('click', function(e) {
+            const userMenu = document.getElementById('userMenu');
+            if (!userMenu.contains(e.target)) {
+                document.getElementById('userDropdown').classList.remove('show');
+            }
+        });
+        
+        // 退出登录
+        async function logout() {
+            if (!currentUser) return;
+            
+            try {
+                await fetch('/api/users/logout', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        userId: currentUser.userId,
+                        token: currentUser.token
+                    })
+                });
+            } catch (error) {
+                console.error('登出错误:', error);
+            }
+            
+            localStorage.removeItem('oj_user');
+            currentUser = null;
+            
+            document.getElementById('btnShowLogin').style.display = 'block';
+            document.getElementById('userAvatarBtn').style.display = 'none';
+            document.getElementById('userDropdown').classList.remove('show');
+            if (currentView === 'problems') {
+                loadProblems(currentPage || 1);
+            }
+        }
+        
+        // 打开个人资料（暂时只显示信息）
+        function openProfileModal() {
+            document.getElementById('userDropdown').classList.remove('show');
+            document.getElementById('profileModal').classList.add('show');
+            
+            // 填充当前用户信息
+            if (currentUser) {
+                document.getElementById('profileUsername').value = currentUser.username;
+                document.getElementById('profileNickname').value = currentUser.nickname || currentUser.username;
+                document.getElementById('profileEmail').value = currentUser.email || '';
+            }
+            
+            document.getElementById('profileNickname').focus();
+        }
+        
+        // 关闭个人资料模态框
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.remove('show');
+            document.getElementById('profileForm').reset();
+            document.getElementById('profileError').classList.remove('show');
+        }
+        
+        // 处理更新个人资料
+        async function handleUpdateProfile(event) {
+            event.preventDefault();
+            
+            if (!currentUser) {
+                document.getElementById('profileError').textContent = '请先登录';
+                document.getElementById('profileError').classList.add('show');
+                return false;
+            }
+            
+            const nickname = document.getElementById('profileNickname').value.trim();
+            const email = document.getElementById('profileEmail').value.trim();
+            
+            if (!nickname) {
+                document.getElementById('profileError').textContent = '请输入昵称';
+                document.getElementById('profileError').classList.add('show');
+                return false;
+            }
+            
+            // 验证邮箱格式（如果提供了邮箱）
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                document.getElementById('profileError').textContent = '请输入有效的邮箱地址';
+                document.getElementById('profileError').classList.add('show');
+                return false;
+            }
+            
+            const btn = document.getElementById('profileBtn');
+            btn.disabled = true;
+            btn.textContent = '保存中...';
+            
+            try {
+                const res = await fetch('/api/users/profile', {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        userId: currentUser.userId,
+                        token: currentUser.token,
+                        nickname,
+                        email
+                    })
+                });
+                
+                const data = await res.json();
+                
+                if (data.success) {
+                    // 使用后端返回值回填本地用户信息
+                    if (data.data) {
+                        currentUser = {
+                            ...currentUser,
+                            ...data.data,
+                            token: currentUser.token
+                        };
+                    } else {
+                        currentUser.nickname = nickname;
+                        currentUser.email = email || null;
+                    }
+                    localStorage.setItem('oj_user', JSON.stringify(currentUser));
+                    
+                    // 更新UI
+                    updateUIForLoggedInUser();
+                    
+                    alert('个人资料更新成功！');
+                    closeProfileModal();
+                } else {
+                    document.getElementById('profileError').textContent = data.message;
+                    document.getElementById('profileError').classList.add('show');
+                }
+            } catch (error) {
+                document.getElementById('profileError').textContent = '网络错误，请稍后重试';
+                document.getElementById('profileError').classList.add('show');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '保存修改';
+            }
+            
+            return false;
+        }
+        
+        // 打开头像上传模态框
+        function openAvatarModal() {
+            document.getElementById('userDropdown').classList.remove('show');
+            document.getElementById('avatarModal').classList.add('show');
+            
+            // 显示当前头像
+            const preview = document.getElementById('avatarPreview');
+            if (currentUser && currentUser.avatar) {
+                preview.src = currentUser.avatar;
+            } else {
+                preview.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="%23ccc"/><text x="12" y="16" text-anchor="middle" fill="%23fff" font-size="12">?</text></svg>';
+            }
+        }
+        
+        // 关闭头像上传模态框
+        function closeAvatarModal() {
+            document.getElementById('avatarModal').classList.remove('show');
+            selectedAvatar = null;
+            document.getElementById('avatarError').classList.remove('show');
+        }
+        
+        // 打开修改密码模态框
+        function openChangePasswordModal() {
+            document.getElementById('userDropdown').classList.remove('show');
+            document.getElementById('changePasswordModal').classList.add('show');
+            document.getElementById('currentPassword').focus();
+        }
+        
+        // 关闭修改密码模态框
+        function closeChangePasswordModal() {
+            document.getElementById('changePasswordModal').classList.remove('show');
+            document.getElementById('changePasswordForm').reset();
+            document.getElementById('changePasswordError').classList.remove('show');
+            document.getElementById('newPasswordStrength').style.display = 'none';
+            document.getElementById('newPasswordMatch').textContent = '';
+        }
+        
+        // 检查新密码强度
+        function checkNewPasswordStrength() {
+            const password = document.getElementById('newPassword').value;
+            const strengthFill = document.getElementById('newStrengthFill');
+            const strengthText = document.getElementById('newStrengthText');
+            const strengthDiv = document.getElementById('newPasswordStrength');
+            
+            if (!password) {
+                strengthDiv.style.display = 'none';
+                return;
+            }
+            
+            strengthDiv.style.display = 'block';
+            
+            let score = 0;
+            
+            // 长度检查
+            if (password.length >= 8) score++;
+            if (password.length >= 12) score++;
+            
+            // 大写字母
+            if (/[A-Z]/.test(password)) score++;
+            
+            // 小写字母
+            if (/[a-z]/.test(password)) score++;
+            
+            // 数字
+            if (/[0-9]/.test(password)) score++;
+            
+            // 特殊字符
+            if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) score++;
+            
+            let strengthClass = '';
+            let strengthLabel = '';
+            
+            if (score <= 2) {
+                strengthClass = 'weak';
+                strengthLabel = '弱';
+                strengthText.style.color = '#f44336';
+            } else if (score <= 3) {
+                strengthClass = 'fair';
+                strengthLabel = '中等';
+                strengthText.style.color = '#ff9800';
+            } else if (score <= 4) {
+                strengthClass = 'good';
+                strengthLabel = '强';
+                strengthText.style.color = '#4caf50';
+            } else {
+                strengthClass = 'strong';
+                strengthLabel = '非常强';
+                strengthText.style.color = '#2e7d32';
+            }
+            
+            strengthFill.className = 'strength-fill ' + strengthClass;
+            strengthText.textContent = '密码强度: ' + strengthLabel;
+            
+            // 同时检查密码匹配
+            checkNewPasswordMatch();
+        }
+        
+        // 检查新密码匹配
+        function checkNewPasswordMatch() {
+            const password = document.getElementById('newPassword').value;
+            const confirm = document.getElementById('confirmNewPassword').value;
+            const matchDiv = document.getElementById('newPasswordMatch');
+            
+            if (!confirm) {
+                matchDiv.textContent = '';
+                matchDiv.className = 'password-match';
+                return;
+            }
+            
+            if (password === confirm) {
+                matchDiv.textContent = '✓ 密码匹配';
+                matchDiv.className = 'password-match match';
+            } else {
+                matchDiv.textContent = '✗ 密码不匹配';
+                matchDiv.className = 'password-match no-match';
+            }
+        }
+        
+        // 处理修改密码
+        async function handleChangePassword(event) {
+            event.preventDefault();
+            
+            if (!currentUser) {
+                document.getElementById('changePasswordError').textContent = '请先登录';
+                document.getElementById('changePasswordError').classList.add('show');
+                return false;
+            }
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+            
+            if (!currentPassword || !newPassword || !confirmNewPassword) {
+                document.getElementById('changePasswordError').textContent = '请填写所有字段';
+                document.getElementById('changePasswordError').classList.add('show');
+                return false;
+            }
+            
+            // 验证新密码强度（客户端验证）
+            if (newPassword.length < 8) {
+                document.getElementById('changePasswordError').textContent = '新密码长度至少8个字符';
+                document.getElementById('changePasswordError').classList.add('show');
+                return false;
+            }
+            
+            if (!/[A-Z]/.test(newPassword)) {
+                document.getElementById('changePasswordError').textContent = '新密码必须包含至少一个大写字母';
+                document.getElementById('changePasswordError').classList.add('show');
+                return false;
+            }
+            
+            if (!/[a-z]/.test(newPassword)) {
+                document.getElementById('changePasswordError').textContent = '新密码必须包含至少一个小写字母';
+                document.getElementById('changePasswordError').classList.add('show');
+                return false;
+            }
+            
+            if (!/[0-9]/.test(newPassword)) {
+                document.getElementById('changePasswordError').textContent = '新密码必须包含至少一个数字';
+                document.getElementById('changePasswordError').classList.add('show');
+                return false;
+            }
+            
+            if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(newPassword)) {
+                document.getElementById('changePasswordError').textContent = '新密码必须包含至少一个特殊字符';
+                document.getElementById('changePasswordError').classList.add('show');
+                return false;
+            }
+            
+            if (newPassword !== confirmNewPassword) {
+                document.getElementById('changePasswordError').textContent = '两次输入的新密码不一致';
+                document.getElementById('changePasswordError').classList.add('show');
+                return false;
+            }
+            
+            const btn = document.getElementById('changePasswordBtn');
+            btn.disabled = true;
+            btn.textContent = '修改中...';
+            
+            try {
+                const res = await fetch('/api/users/change-password', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        userId: currentUser.userId,
+                        token: currentUser.token,
+                        currentPassword,
+                        newPassword
+                    })
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    alert('密码修改成功！');
+                    closeChangePasswordModal();
+                } else {
+                    document.getElementById('changePasswordError').textContent = data.message;
+                    document.getElementById('changePasswordError').classList.add('show');
+                }
+            } catch (error) {
+                document.getElementById('changePasswordError').textContent = '网络错误，请稍后重试';
+                document.getElementById('changePasswordError').classList.add('show');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '修改密码';
+            }
+            
+            return false;
+        }
+        
+        // 处理头像选择
+        function handleAvatarSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // 检查文件类型
+            if (!file.type.startsWith('image/')) {
+                document.getElementById('avatarError').textContent = '请选择图片文件';
+                document.getElementById('avatarError').classList.add('show');
+                return;
+            }
+            
+            // 检查文件大小（500KB）
+            if (file.size > 500 * 1024) {
+                document.getElementById('avatarError').textContent = '图片大小不能超过500KB';
+                document.getElementById('avatarError').classList.add('show');
+                return;
+            }
+            
+            // 读取文件并预览
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedAvatar = e.target.result;
+                document.getElementById('avatarPreview').src = selectedAvatar;
+                document.getElementById('avatarError').classList.remove('show');
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // 上传头像
+        async function uploadAvatar() {
+            if (!selectedAvatar) {
+                document.getElementById('avatarError').textContent = '请先选择图片';
+                document.getElementById('avatarError').classList.add('show');
+                return;
+            }
+            
+            if (!currentUser) {
+                document.getElementById('avatarError').textContent = '请先登录';
+                document.getElementById('avatarError').classList.add('show');
+                return;
+            }
+            
+            try {
+                const res = await fetch('/api/users/avatar', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        userId: currentUser.userId,
+                        token: currentUser.token,
+                        avatar: selectedAvatar
+                    })
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    currentUser.avatar = data.data.avatar;
+                    localStorage.setItem('oj_user', JSON.stringify(currentUser));
+                    updateUIForLoggedInUser();
+                    closeAvatarModal();
+                } else {
+                    document.getElementById('avatarError').textContent = data.message;
+                    document.getElementById('avatarError').classList.add('show');
+                }
+            } catch (error) {
+                document.getElementById('avatarError').textContent = '上传失败，请稍后重试';
+                document.getElementById('avatarError').classList.add('show');
+            }
+        }
+        
+    </script>
+</body>
+</html>

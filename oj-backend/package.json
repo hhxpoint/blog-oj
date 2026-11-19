@@ -1,0 +1,41 @@
+{
+  "name": "oj-system-backend",
+  "version": "1.0.0",
+  "description": "Online Judge System Backend - 在线判题系统后端",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "keywords": [
+    "oj",
+    "online-judge",
+    "code-runner",
+    "programming"
+  ],
+  "author": "point_xuan",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "child_process": "^1.0.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "fs-extra": "^11.1.1",
+    "nodemailer": "^8.0.4",
+    "os": "^0.1.2",
+    "path": "^0.12.7",
+    "redis": "^4.6.5",
+    "tcb-admin-node": "^1.23.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.40.0",
+    "jest": "^29.5.0",
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

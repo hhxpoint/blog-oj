@@ -1,0 +1,12 @@
+﻿node_modules/
+/public/
+.deploy_git/
+db.json
+.env
+.env.local
+*.log
+.DS_Store
+/oj-backend/node_modules/
+/oj-backend/public/*
+!/oj-backend/public/oj/
+!/oj-backend/public/oj/**

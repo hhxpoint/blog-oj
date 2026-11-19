@@ -1,0 +1,787 @@
+/* ============================================
+   AcOJ - 在线判题系统样式
+   风格参考: AcWing
+   ============================================ */
+
+/* 基础重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    min-height: 100vh;
+}
+
+/* ============================================
+   顶部导航栏
+   ============================================ */
+.top-nav {
+    background: #2d2d2d;
+    height: 56px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.logo {
+    text-decoration: none;
+}
+
+.logo-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: #4CAF50;
+    letter-spacing: 1px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 5px;
+}
+
+.nav-link {
+    color: #ccc;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.nav-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.active {
+    color: #fff;
+    background: #4CAF50;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background: #444;
+    border-radius: 4px;
+    padding: 0 10px;
+}
+
+.search-box input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    padding: 8px;
+    width: 200px;
+    font-size: 14px;
+    outline: none;
+}
+
+.search-box input::placeholder {
+    color: #999;
+}
+
+.search-btn {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.back-blog {
+    color: #4CAF50 !important;
+}
+
+/* ============================================
+   主内容区
+   ============================================ */
+.main-content {
+    margin-top: 56px;
+    height: calc(100vh - 56px);
+    padding: 0;
+}
+
+.problem-container {
+    display: flex;
+    height: 100%;
+}
+
+/* ============================================
+   左侧题目面板
+   ============================================ */
+.problem-panel {
+    width: 50%;
+    background: #fff;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.problem-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e0e0e0;
+    background: #fafafa;
+}
+
+.problem-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.problem-id {
+    color: #999;
+    margin-right: 8px;
+}
+
+.problem-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+    color: #666;
+}
+
+.problem-meta span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.problem-meta i {
+    font-style: normal;
+}
+
+.difficulty {
+    padding: 2px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.difficulty.easy {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.difficulty.medium {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+.difficulty.hard {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.problem-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+}
+
+.section {
+    margin-bottom: 24px;
+}
+
+.section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    border-left: 3px solid #4CAF50;
+}
+
+.section-content {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #555;
+    white-space: pre-wrap;
+}
+
+/* 样例 */
+.samples-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sample-box {
+    background: #f8f9fa;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+}
+
+.sample-header {
+    background: #e9ecef;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+}
+
+.sample-content {
+    padding: 12px 14px;
+    font-family: "Consolas", "Monaco", "Courier New", monospace;
+    font-size: 13px;
+    background: #fff;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* ============================================
+   右侧编辑器面板
+   ============================================ */
+.editor-panel {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+}
+
+.editor-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    background: #fafafa;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.language-selector select {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    background: #fff;
+    cursor: pointer;
+    outline: none;
+}
+
+.language-selector select:focus {
+    border-color: #4CAF50;
+}
+
+.toolbar-right {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-reset, .btn-settings {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+    color: #666;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-reset:hover, .btn-settings:hover {
+    border-color: #4CAF50;
+    color: #4CAF50;
+}
+
+.editor-wrapper {
+    flex: 1;
+    min-height: 300px;
+}
+
+#monacoEditor {
+    height: 100%;
+    min-height: 300px;
+}
+
+.editor-actions {
+    display: flex;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #fafafa;
+    border-top: 1px solid #e0e0e0;
+}
+
+.btn-run, .btn-submit {
+    flex: 1;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+}
+
+.btn-run {
+    background: #fff;
+    color: #4CAF50;
+    border: 1px solid #4CAF50;
+}
+
+.btn-run:hover {
+    background: #e8f5e9;
+}
+
+.btn-submit {
+    background: #4CAF50;
+    color: #fff;
+}
+
+.btn-submit:hover {
+    background: #43a047;
+}
+
+.btn-icon {
+    font-size: 12px;
+}
+
+/* ============================================
+   输出面板
+   ============================================ */
+.output-panel {
+    height: 200px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    background: #fafafa;
+}
+
+.output-tabs {
+    display: flex;
+    border-bottom: 1px solid #e0e0e0;
+    background: #fff;
+}
+
+.output-tabs .tab {
+    padding: 10px 20px;
+    border: none;
+    background: transparent;
+    color: #666;
+    font-size: 13px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.output-tabs .tab:hover {
+    color: #333;
+}
+
+.output-tabs .tab.active {
+    color: #4CAF50;
+    border-bottom-color: #4CAF50;
+}
+
+.output-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.output-tab-content {
+    display: none;
+    padding: 12px 16px;
+}
+
+.output-tab-content.active {
+    display: block;
+}
+
+#outputText, #resultText {
+    font-family: "Consolas", "Monaco", "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+/* 结果样式 */
+.result-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.result-item.success {
+    color: #2e7d32;
+}
+
+.result-item.error {
+    color: #c62828;
+}
+
+.result-item.warning {
+    color: #ef6c00;
+}
+
+.status-icon {
+    font-weight: bold;
+}
+
+.runtime {
+    color: #999;
+    font-size: 12px;
+}
+
+.running {
+    color: #4CAF50;
+}
+
+.error-message {
+    background: #ffebee;
+    color: #c62828;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+/* 判题结果 */
+.judge-result {
+    padding: 16px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+
+.judge-result.status-ac {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.judge-result.status-wa {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.judge-result.status-tle {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+.judge-result.status-mle {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+.judge-result.status-re {
+    background: #fce4ec;
+    color: #c2185b;
+}
+
+.judge-result.status-ce {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.judge-result.status-judge {
+    background: #f5f5f5;
+    color: #666;
+}
+
+.result-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.result-icon {
+    font-size: 24px;
+}
+
+.result-status {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.result-desc {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.result-details {
+    display: flex;
+    gap: 20px;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+/* ============================================
+   响应式设计
+   ============================================ */
+@media (max-width: 900px) {
+    .problem-container {
+        flex-direction: column;
+    }
+
+    .problem-panel, .editor-panel {
+        width: 100%;
+    }
+
+    .problem-panel {
+        height: 40vh;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .editor-panel {
+        height: 60vh;
+    }
+
+    .search-box input {
+        width: 120px;
+    }
+}
+
+@media (max-width: 600px) {
+    .nav-left {
+        gap: 15px;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .search-box {
+        display: none;
+    }
+
+    .problem-header {
+        padding: 15px;
+    }
+
+    .problem-body {
+        padding: 15px;
+    }
+
+    .editor-actions {
+        flex-direction: column;
+    }
+}
+
+/* ============================================
+   滚动条样式
+   ============================================ */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* ============================================
+   题库首页样式 (index.html)
+   ============================================ */
+.oj-home {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.problem-list-container {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.problem-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: #fafafa;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.problem-list-header h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.problem-filters {
+    display: flex;
+    gap: 10px;
+}
+
+.problem-filters select {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    outline: none;
+}
+
+.problem-table {
+    width: 100%;
+}
+
+.problem-table th, .problem-table td {
+    padding: 14px 20px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.problem-table th {
+    background: #fafafa;
+    font-weight: 500;
+    color: #666;
+    font-size: 13px;
+}
+
+.problem-table tr:hover {
+    background: #f5f5f5;
+    cursor: pointer;
+}
+
+.problem-table .problem-id {
+    color: #999;
+    font-size: 13px;
+}
+
+.problem-table .problem-name {
+    color: #333;
+    font-weight: 500;
+}
+
+.problem-table .problem-name:hover {
+    color: #4CAF50;
+}
+
+.problem-table .difficulty-tag {
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.problem-table .difficulty-tag.easy {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.problem-table .difficulty-tag.medium {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+.problem-table .difficulty-tag.hard {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.problem-table .ac-count {
+    color: #4CAF50;
+    font-size: 13px;
+}
+
+.problem-table .submit-count {
+    color: #999;
+    font-size: 13px;
+}
+
+/* 分页 */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 20px;
+}
+
+.page-btn {
+    padding: 8px 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+    color: #333;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+    border-color: #4CAF50;
+    color: #4CAF50;
+}
+
+.page-btn.active {
+    background: #4CAF50;
+    color: #fff;
+    border-color: #4CAF50;
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 加载和错误状态 */
+.loading-container, .error-container, .empty-container {
+    padding: 60px 20px;
+    text-align: center;
+    color: #999;
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e0e0e0;
+    border-top-color: #4CAF50;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
